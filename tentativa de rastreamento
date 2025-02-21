@@ -1,0 +1,29 @@
+from scapy.all import sniff, Ether, IP, TCP, UDP
+
+def packet_callback(packet):
+    # Vendoa camada Ethernet e o endereço MAC de origem e destino
+    if Ether in packet:
+        print(f"Ethernet Source: {packet[Ether].src}, Destination: {packet[Ether].dst}")
+
+    # Vendo se o pacote contém uma camada IP
+    if IP in packet:
+        #endereço IP de origem e destino
+        print(f"IP Source: {packet[IP].src}, Destination: {packet[IP].dst}")
+
+        # Vendo se o pacote contém uma camada TCP ou UDP e suas respectivas portas origem e destino
+        if TCP in packet:
+            print(f"TCP Source Port: {packet[TCP].sport}, Destination Port: {packet[TCP].dport}")
+
+        elif UDP in packet:
+            print(f"UDP Source Port: {packet[UDP].sport}, Destination Port: {packet[UDP].dport}")
+
+    print("-" * 40)
+
+def start_sniffing(interface=None):  
+    print("Iniciando captura de pacotes...")
+    sniff(iface=interface, prn=packet_callback, store=False)
+
+if __name__ == "__main__":
+    # '*******' interface de rede que vou monitorar
+    interface = "******"
+    start_sniffing(interface)
